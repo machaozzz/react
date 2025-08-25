@@ -609,4 +609,540 @@ body {
   background-clip: text;
 }
 
-/* FIM DA PARTE 1 - Continue para ver o resto dos estilos do catálogo, modal, formulários e responsivo */
+/* PARTE 2 - CATÁLOGO AVANÇADO E PESQUISA MODERNA */
+
+/* Section Headers Modernos */
+.section {
+  padding: var(--space-32) var(--space-6);
+  max-width: 1400px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: var(--space-20);
+  position: relative;
+}
+
+.section-header::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(0, 102, 255, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.section-title {
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 900;
+  margin-bottom: var(--space-4);
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, 
+    var(--text-primary) 0%, 
+    var(--primary) 50%, 
+    var(--accent) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+.section-subtitle {
+  font-size: 18px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Ultra-Modern Search Panel */
+.search-panel {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-2xl);
+  backdrop-filter: blur(var(--blur-lg));
+  margin-bottom: var(--space-12);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.search-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, 
+    rgba(0, 102, 255, 0.02) 0%, 
+    transparent 50%, 
+    rgba(255, 71, 87, 0.02) 100%
+  );
+  pointer-events: none;
+}
+
+.search-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-6) var(--space-8);
+  border-bottom: 1px solid var(--border-subtle);
+  position: relative;
+  z-index: 2;
+}
+
+.search-title {
+  font-size: 20px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.search-icon {
+  width: 24px;
+  height: 24px;
+  color: var(--primary);
+}
+
+.search-toggle {
+  background: none;
+  border: 1px solid var(--border-medium);
+  color: var(--primary);
+  font-weight: 600;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: var(--transition);
+  backdrop-filter: blur(var(--blur-sm));
+}
+
+.search-toggle:hover {
+  background: var(--bg-glass);
+  color: var(--accent);
+  border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.search-content {
+  padding: var(--space-8);
+  position: relative;
+  z-index: 2;
+}
+
+.search-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-6);
+  margin-bottom: var(--space-8);
+}
+
+.search-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.search-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.search-input,
+.search-select {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  color: var(--text-primary);
+  font-size: 15px;
+  transition: var(--transition);
+  position: relative;
+}
+
+.search-input::placeholder {
+  color: var(--text-muted);
+}
+
+.search-input:focus,
+.search-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.search-input:hover,
+.search-select:hover {
+  border-color: var(--border-medium);
+}
+
+/* Advanced Range Slider */
+.price-range {
+  grid-column: span 2;
+}
+
+.price-inputs {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.price-inputs input {
+  flex: 1;
+}
+
+.range-slider {
+  position: relative;
+  height: 6px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  margin: var(--space-4) 0;
+}
+
+.range-track {
+  position: absolute;
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  border-radius: inherit;
+}
+
+.range-thumb {
+  position: absolute;
+  top: -6px;
+  width: 18px;
+  height: 18px;
+  background: white;
+  border: 3px solid var(--primary);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+
+.range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow: var(--shadow-md);
+}
+
+.search-actions {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: flex-end;
+  align-items: center;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.results-count {
+  color: var(--text-secondary);
+  font-size: 14px;
+  margin-right: auto;
+}
+
+/* Catalog Controls */
+.catalog-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-8);
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+
+.view-controls {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.view-toggle {
+  display: flex;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-1);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-xs);
+}
+
+.view-btn {
+  background: none;
+  border: none;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.view-btn.active {
+  background: var(--primary);
+  color: white;
+  box-shadow: var(--shadow-sm);
+}
+
+.view-btn:not(.active):hover {
+  color: var(--text-primary);
+  background: var(--bg-glass);
+}
+
+.sort-filter {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+}
+
+.sort-select {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2) var(--space-4);
+  color: var(--text-primary);
+  backdrop-filter: blur(var(--blur-sm));
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.sort-select:hover {
+  border-color: var(--border-medium);
+  background: var(--bg-glass-hover);
+}
+
+/* Ultra-Modern Vehicle Grid */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: var(--space-6);
+  margin-bottom: var(--space-12);
+}
+
+.catalog-grid.list-view {
+  grid-template-columns: 1fr;
+}
+
+.catalog-grid.compact-view {
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-4);
+}
+
+/* Revolutionary Vehicle Cards */
+.vehicle-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  backdrop-filter: blur(var(--blur-md));
+  transition: var(--transition-slow);
+  cursor: pointer;
+  position: relative;
+  box-shadow: var(--shadow-md);
+  transform-style: preserve-3d;
+}
+
+.vehicle-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.05) 0%, 
+    transparent 50%, 
+    rgba(0, 102, 255, 0.03) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.vehicle-card:hover::before {
+  opacity: 1;
+}
+
+.vehicle-card:hover {
+  transform: translateY(-8px) rotateX(2deg);
+  box-shadow: var(--shadow-xl);
+  border-color: var(--border-strong);
+}
+
+.vehicle-image-container {
+  position: relative;
+  height: 240px;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+}
+
+.vehicle-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--transition-slow);
+  filter: contrast(1.05) saturate(1.1);
+}
+
+.vehicle-card:hover .vehicle-image {
+  transform: scale(1.08);
+  filter: contrast(1.15) saturate(1.2);
+}
+
+.vehicle-badges {
+  position: absolute;
+  top: var(--space-4);
+  left: var(--space-4);
+  display: flex;
+  gap: var(--space-2);
+  z-index: 3;
+}
+
+.vehicle-badge {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(var(--blur-sm));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.vehicle-badge.new {
+  background: linear-gradient(135deg, var(--success), #27ae60);
+}
+
+.vehicle-badge.featured {
+  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+}
+
+.vehicle-badge.premium {
+  background: linear-gradient(135deg, #f39c12, #e67e22);
+}
+
+.vehicle-price-tag {
+  position: absolute;
+  top: var(--space-4);
+  right: var(--space-4);
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  color: white;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  font-weight: 800;
+  font-size: 16px;
+  box-shadow: var(--shadow-md);
+  z-index: 3;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.vehicle-content {
+  padding: var(--space-6);
+  position: relative;
+  z-index: 2;
+}
+
+.vehicle-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+  line-height: 1.3;
+  color: var(--text-primary);
+}
+
+.vehicle-description {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: var(--space-4);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.vehicle-specs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-2);
+  background: var(--bg-glass);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  transition: var(--transition-fast);
+}
+
+.spec-item:hover {
+  background: var(--bg-glass-hover);
+  border-color: var(--border-medium);
+}
+
+.spec-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.spec-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.vehicle-actions {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.btn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  backdrop-filter: blur(var(--blur-sm));
+}
+
+.btn-icon:hover {
+  background: var(--bg-glass-hover);
+  color: var(--primary);
+  border-color: var(--border-medium);
+  transform: translateY(-1px);
+}
+
+.btn-icon.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+/* FIM DA PARTE 2 - Continue para ver o modal ultra-moderno, formulários e design responsivo */
