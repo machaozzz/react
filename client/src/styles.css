@@ -3036,134 +3036,158 @@ body {
   gap: var(--space-6);
 }
 
-/* Minimal layout helpers for contact alignment (no visual style changes) */
-
-.container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 var(--space-6);
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* Contact info grid: ensure consistent columns & alignment */
-.contact-info-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-6);
-  align-items: stretch;
-}
-
-/* Card alignment: keep internal layout stable */
-.contact-info-card {
-  display: flex;
-  gap: var(--space-4);
-  align-items: center;
+/* Scoped: Form Preferences - Modern Cards (only inside contact form) */
+.contact-form .form-preferences {
+  margin: var(--space-8) 0;
   padding: var(--space-6);
-  min-height: 96px;
+  background: var(--bg-glass);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
 }
 
-/* Form + Map grid */
-.contact-form-grid {
-  display: grid;
-  grid-template-columns: 1fr 420px;
-  gap: var(--space-8);
-  align-items: start;
-}
-
-/* Ensure form column is centered inside its container without changing visual tokens */
-.contact-form-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 0; /* keep existing visual padding from inner wrapper */
-}
-
-/* Map column baseline */
-.contact-map-container {
-  padding: var(--space-6);
-  background: transparent; /* preserve look by not overriding */
-}
-
-/* Footer helper if footer used .site-footer */
-.site-footer {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: var(--space-8) var(--space-6);
+.contact-form .preference-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-5);
   text-align: center;
 }
 
-/* Keep responsive behaviour — adapt columns progressively */
-@media (max-width: 1100px) {
-  .contact-info-grid { grid-template-columns: repeat(2, 1fr); }
-  .contact-form-grid { grid-template-columns: 1fr 360px; }
+.contact-form .preference-options-modern {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
 }
 
-@media (max-width: 768px) {
-  .contact-info-grid { grid-template-columns: 1fr; gap: var(--space-4); }
-  .contact-form-grid { grid-template-columns: 1fr; gap: var(--space-6); }
-  .form-row { grid-template-columns: 1fr; gap: var(--space-4); }
-  .contact-form-container { padding: var(--space-6); }
+.contact-form .preference-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-5);
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: var(--transition);
+  overflow: hidden;
+  min-height: 100px;
 }
 
-/* Inline label for select (Assunto) — label à esquerda, valor à direita (fix) */
-.form-field.inline { position: relative; display: flex; align-items: center; }
-
-.form-field.inline .form-label-inline {
+.contact-form .preference-card::before {
+  content: '';
   position: absolute;
-  left: var(--space-4);
-  top: 50%;
-  transform: translateY(-50%);
+  inset: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255, 255, 255, 0.05) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.contact-form .preference-card:hover::before { opacity: 1; }
+
+.contact-form .preference-card:hover {
+  border-color: var(--border-medium);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.contact-form .preference-card.blue.active {
+  border-color: var(--primary);
+  background: rgba(0, 102, 255, 0.1);
+}
+
+.contact-form .preference-card.green.active {
+  border-color: var(--success);
+  background: rgba(46, 213, 115, 0.1);
+}
+
+.contact-form .preference-card.emerald.active {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+}
+
+.contact-form .preference-radio {
+  position: absolute;
+  opacity: 0;
   pointer-events: none;
-  color: var(--text-muted);
+}
+
+.contact-form .preference-icon {
+  font-size: 28px;
+  margin-bottom: var(--space-2);
+  transition: var(--transition);
+}
+
+.contact-form .preference-card:hover .preference-icon {
+  transform: scale(1.1);
+}
+
+.contact-form .preference-label-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: var(--transition);
+}
+
+.contact-form .preference-card.active .preference-label-text {
+  color: var(--text-primary);
   font-weight: 700;
-  font-size: 15px;
-  z-index: 4;
-  /* fundo igual ao input para não deixar o texto aparecer por baixo */
-  background: var(--bg-terciary);
-  padding: 0 10px 0 0;
-  height: 100%;
+}
+
+.contact-form .preference-check {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
   display: flex;
   align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  opacity: 0;
+  transform: scale(0);
+  transition: var(--transition);
 }
 
-/* espaço reservado no select para a label — ajustar se a label mudar de largura */
-.form-field.inline .form-select.with-inline-label,
-.form-field.inline .form-input.with-inline-label {
-  padding-left: calc(var(--space-4) + 120px); /* ajustar 96–140px conforme necessário */
-  background: var(--bg-terciary);
-  color: var(--text-primary);
-  border: 2px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  height: 56px;
-  line-height: 56px;
-  box-sizing: border-box;
+.contact-form .preference-card.blue.active .preference-check {
+  background: var(--primary);
+  opacity: 1;
+  transform: scale(1);
 }
 
-/* manter aparência consistente no foco */
-.form-field.inline .form-select.with-inline-label:focus {
-  outline: none;
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.08);
+.contact-form .preference-card.green.active .preference-check {
+  background: var(--success);
+  opacity: 1;
+  transform: scale(1);
 }
 
-/* esconder seta nativa em browsers que suportam */
-.form-field.inline .form-select.with-inline-label {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-image: none; /* evita conflitos */
-  padding-right: calc(var(--space-4) + 18px); /* espaço para seta custom se quiseres adicionar */
+.contact-form .preference-card.emerald.active .preference-check {
+  background: #10b981;
+  opacity: 1;
+  transform: scale(1);
 }
 
-/* fallback: torna as opções legíveis no caso do dropdown nativo (alguns browsers ignoram) */
-.form-field.inline .form-select.with-inline-label option {
-  background: var(--bg-primary);
-  color: var(--text-primary);
+/* Mobile / stacked variant inside contact form */
+.contact-form .preference-options-modern {
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
 }
 
-/* responsivo */
-@media (max-width: 480px) {
-  .form-field.inline .form-label-inline { font-size: 14px; left: var(--space-4); }
-  .form-field.inline .form-select.with-inline-label { padding-left: calc(var(--space-4) + 96px); height: 52px; line-height: 52px; }
+.contact-form .preference-card {
+  flex-direction: row;
+  justify-content: flex-start;
+  min-height: 60px;
+  padding: var(--space-4);
+}
+
+.contact-form .preference-icon {
+  font-size: 24px;
+  margin-bottom: 0;
+  margin-right: var(--space-3);
 }

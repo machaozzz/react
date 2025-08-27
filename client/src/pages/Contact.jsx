@@ -413,35 +413,57 @@ export default function Contact() {
   const formRef = useRef(null)
   const isFormInView = useInView(formRef, { once: true, margin: "-50px" })
   
-  const form = useForm(
-    {
-      name: '',
-      email: '',
-      phone: '',
-      subject: 'Informações Gerais',
-      message: '',
-      interest: '',
-      budget: '',
-      contactPreference: 'email'
-    },
-    {
-      name: {
-        required: 'Nome é obrigatório',
-        minLength: 2
-      },
-      email: {
-        required: 'Email é obrigatório',
-        pattern: {
-          test: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
-          message: 'Email inválido'
-        }
-      },
-      message: {
-        required: 'Mensagem é obrigatória',
-        minLength: 10
+const form = useForm(
+  {
+    name: '',
+    email: '',
+    phone: '',
+    subject: 'Informações Gerais',
+    message: '',
+    interest: '',
+    budget: '',
+    contactPreference: 'email'
+  },
+  {
+    name: {
+      required: 'Nome é obrigatório',
+      minLength: 2,
+      pattern: {
+        test: (value) => /^[A-Za-zÀ-ÿ\u00f1\u00d1\s]+$/.test(value),
+        message: 'Nome deve conter apenas letras'
       }
+    },
+    email: {
+      required: 'Email é obrigatório',
+      pattern: {
+        test: (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+        message: 'Email deve conter @ e ser válido'
+      }
+    },
+    phone: {
+      pattern: {
+        test: (value) => !value || /^[\d\s+()-]+$/.test(value),
+        message: 'Telefone deve conter apenas números'
+      }
+    },
+    interest: {
+      pattern: {
+        test: (value) => !value || /^[A-Za-z0-9À-ÿ\u00f1\u00d1\s\-,.]+$/.test(value),
+        message: 'Formato inválido'
+      }
+    },
+    budget: {
+      pattern: {
+        test: (value) => !value || /^[\d\s€.,\-]+$/.test(value),
+        message: 'Orçamento deve conter apenas números e €'
+      }
+    },
+    message: {
+      required: 'Mensagem é obrigatória',
+      minLength: 10
     }
-  )
+  }
+)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -545,8 +567,8 @@ export default function Contact() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
             >
-              Experiência premium em cada contacto. Fale connosco através do canal que preferir
-              e descubra como podemos ajudá-lo a encontrar o carro dos seus sonhos.
+                Fale connosco através do canal que preferir e descubra como podemos 
+  ajudá-lo a encontrar o carro dos seus sonhos.
             </motion.p>
           </motion.div>
         </div>
@@ -636,29 +658,19 @@ export default function Contact() {
                       icon="📞"
                     />
 
-                    {/* subject select with inline fixed label */}
-                    <div className="form-field inline">
-                      <label className="form-label-inline">Assunto</label>
-
-                      <div className="select-wrapper">
-                        {/* visual selected value (readable, aligned) */}
-                        <span className="select-value">{form.values.subject}</span>
-
-                        {/* native select kept for accessibility; text hidden so span shows instead */}
-                        <select
-                          name="subject"
-                          value={form.values.subject}
-                          onChange={form.handleChange}
-                          className="form-input form-select with-inline-label native-select"
-                          aria-label="Assunto"
-                        >
-                          {subjectOptions.map(option => (
-                            <option key={option} value={option}>{option}</option>
-                          ))}
-                        </select>
-
-                        <div className="select-arrow" aria-hidden="true">▾</div>
-                      </div>
+                    {/* --- substitua o bloco abaixo pelo seu snippet --- */}
+                    <div className="form-field">
+                      <label className="form-label">Assunto: {form.values.subject}</label>
+                      <select
+                        name="subject"
+                        value={form.values.subject}
+                        onChange={form.handleChange}
+                        className="form-input form-select"
+                      >
+                        {subjectOptions.map(option => (
+                          <option key={option} value={option}>{option}</option>
+                        ))}
+                      </select>
                     </div>
                   </div>
 
@@ -705,27 +717,30 @@ export default function Contact() {
                     icon="💬"
                   />
 
-                  <div className="form-preferences">
-                    <label className="preference-label">Preferência de Contacto:</label>
-                    <div className="preference-options">
-                      {['email', 'phone', 'whatsapp'].map(pref => (
-                        <label key={pref} className="preference-option">
-                          <input
-                            type="radio"
-                            name="contactPreference"
-                            value={pref}
-                            checked={form.values.contactPreference === pref}
-                            onChange={form.handleChange}
-                          />
-                          <span className="preference-text">
-                            {pref === 'email' && '✉️ Email'}
-                            {pref === 'phone' && '📞 Telefone'}
-                            {pref === 'whatsapp' && '💬 WhatsApp'}
-                          </span>
-                        </label>
-                      ))}
-                    </div>
-                  </div>
+<div className="form-preferences">
+  <label className="preference-label">Preferência de Contacto:</label>
+  <div className="preference-options-modern">
+    {[
+      { value: 'email', icon: '✉️', label: 'Email', color: 'blue' },
+      { value: 'phone', icon: '📞', label: 'Telefone', color: 'green' },
+      { value: 'whatsapp', icon: '💬', label: 'WhatsApp', color: 'emerald' }
+    ].map(pref => (
+      <label key={pref.value} className={`preference-card ${form.values.contactPreference === pref.value ? 'active' : ''} ${pref.color}`}>
+        <input
+          type="radio"
+          name="contactPreference"
+          value={pref.value}
+          checked={form.values.contactPreference === pref.value}
+          onChange={form.handleChange}
+          className="preference-radio"
+        />
+        <div className="preference-icon">{pref.icon}</div>
+        <span className="preference-label-text">{pref.label}</span>
+        <div className="preference-check">✓</div>
+      </label>
+    ))}
+  </div>
+</div>
 
                   <motion.button
                     type="submit"
