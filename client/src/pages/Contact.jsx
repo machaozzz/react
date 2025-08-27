@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { motion, useInView, useAnimation } from 'framer-motion'
+import { motion, AnimatePresence, useInView, useAnimation } from 'framer-motion'
 
 // Advanced Form Hook
 function useForm(initialValues, validationRules) {
@@ -124,6 +124,11 @@ function ContactInfoCard({ icon, title, content, delay = 0, color = "primary" })
     }
   }
 
+  // prepare address text and maps URL when this is the Morada card
+  const addressText = Array.isArray(content) ? content.join(', ') : content
+  const isAddress = title && title.toLowerCase().includes('morad')
+  const mapsUrl = isAddress ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressText)}` : null
+
   return (
     <motion.div
       ref={ref}
@@ -131,35 +136,47 @@ function ContactInfoCard({ icon, title, content, delay = 0, color = "primary" })
       variants={cardVariants}
       initial="hidden"
       animate={controls}
-      whileHover={{ 
-        y: -8, 
-        scale: 1.02,
-        rotateY: 5,
-        boxShadow: "0 25px 80px rgba(0, 0, 0, 0.15)"
-      }}
       transition={{ type: "spring", stiffness: 300 }}
     >
       <motion.div 
         className={`contact-info-icon ${color}`}
         variants={iconVariants}
-        whileHover={{ 
-          scale: 1.1, 
-          rotate: 10,
-          boxShadow: "0 10px 30px rgba(0, 102, 255, 0.3)"
-        }}
       >
         {icon}
       </motion.div>
       
-      <div className="contact-info-content">
-        <h3 className="contact-info-title">{title}</h3>
-        <div className="contact-info-details">
+      <div className="contact-info-content" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        <div className="contact-info-details" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           {Array.isArray(content) ? content.map((item, index) => (
             <div key={index} className="contact-info-item">
               {item}
             </div>
           )) : content}
         </div>
+
+        {/* se for a morada, mostra botão pequeno sem alterar layout geral */}
+        {isAddress && mapsUrl && (
+          <a
+            href={mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-sm btn-primary"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              marginTop: 6,
+              width: 'fit-content',
+              padding: '6px 10px',
+              fontSize: 13,
+              textDecoration: 'none'
+            }}
+          >
+            Ver no Maps
+          </a>
+        )}
+
+        <h3 className="contact-info-title" style={{ marginTop: '8px' }}>{title}</h3>
       </div>
 
       <motion.div 
@@ -199,66 +216,53 @@ function FormField({
   const handleFocus = () => setIsFocused(true)
   const handleBlur = (e) => {
     setIsFocused(false)
-    onBlur(e)
+    if (onBlur) onBlur(e)
   }
 
   const isTextarea = type === 'textarea'
   const InputComponent = isTextarea ? 'textarea' : 'input'
+  const hasValue = value !== undefined && value !== null && value.toString().trim().length > 0
+  const focused = isFocused || hasValue
 
   return (
     <motion.div 
-      className="form-field"
+      className={`form-field stacked ${focused ? 'focused' : ''} ${hasValue ? 'has-value' : ''} ${error && touched ? 'has-error' : ''}`}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
+      transition={{ duration: 0.25 }}
     >
-      <motion.label 
-        className={`form-label ${isFocused || value ? 'focused' : ''} ${error && touched ? 'error' : ''}`}
-        animate={{ 
-          color: error && touched ? '#ff3742' : isFocused ? '#0066ff' : '#a0a0a3',
-          y: isFocused || value ? -24 : 0,
-          scale: isFocused || value ? 0.85 : 1
-        }}
-        transition={{ duration: 0.2 }}
-        onClick={() => inputRef.current?.focus()}
-      >
-        {label} {required && <span className="required-star">*</span>}
-      </motion.label>
+      {/* emoji/icon stacked above */}
+      {icon && (
+        <div className="form-icon-wrapper" aria-hidden="true">
+          <div className="form-icon">{icon}</div>
+        </div>
+      )}
 
-      <div className="form-input-container">
-        {icon && (
-          <motion.div 
-            className="form-input-icon"
-            animate={{ 
-              color: error && touched ? '#ff3742' : isFocused ? '#0066ff' : '#6b6b70' 
-            }}
-          >
-            {icon}
-          </motion.div>
-        )}
-        
+      <div className="form-input-area" style={{ width: '100%', position: 'relative' }}>
+        <motion.label 
+          className={`form-label ${error && touched ? 'error' : ''}`}
+          animate={{ 
+            color: error && touched ? '#ff3742' : focused ? 'var(--primary)' : 'var(--text-muted)'
+          }}
+          transition={{ duration: 0.16 }}
+          onClick={() => inputRef.current?.focus()}
+        >
+          {label} {required && <span className="required-star">*</span>}
+        </motion.label>
+
         <InputComponent
           ref={inputRef}
           type={!isTextarea ? type : undefined}
           name={name}
-          placeholder={placeholder}
+          placeholder={''}             /* placeholder removed to rely on floating label */
           value={value}
           onChange={onChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
           rows={rows}
-          className={`form-input ${error && touched ? 'error' : ''} ${icon ? 'has-icon' : ''}`}
+          className={`form-input ${error && touched ? 'error' : ''}`}
           autoComplete={type === 'email' ? 'email' : type === 'tel' ? 'tel' : 'off'}
-        />
-
-        <motion.div 
-          className="form-input-border"
-          initial={{ scaleX: 0 }}
-          animate={{ 
-            scaleX: isFocused ? 1 : 0,
-            backgroundColor: error && touched ? '#ff3742' : '#0066ff'
-          }}
-          transition={{ duration: 0.3 }}
+          aria-label={label}
         />
       </div>
 
@@ -266,10 +270,10 @@ function FormField({
         {error && touched && (
           <motion.div
             className="form-error"
-            initial={{ opacity: 0, y: -10, height: 0 }}
+            initial={{ opacity: 0, y: -6, height: 0 }}
             animate={{ opacity: 1, y: 0, height: 'auto' }}
-            exit={{ opacity: 0, y: -10, height: 0 }}
-            transition={{ duration: 0.3 }}
+            exit={{ opacity: 0, y: -6, height: 0 }}
+            transition={{ duration: 0.2 }}
           >
             <span className="error-icon">⚠</span>
             {error}
@@ -337,32 +341,48 @@ function SuccessAnimation({ show, onComplete }) {
 // Interactive Map Component
 function InteractiveMap() {
   const [isHovered, setIsHovered] = useState(false)
+  const address = 'R. Moleiros 58, 4415-403 Seixezelo, Portugal' // já tem a localização correcta
+
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`
 
   return (
     <motion.div 
       className="interactive-map"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.3 }}
     >
+      {/* animated background layer only - pointer-events none so it never blocks clicks */}
       <motion.div 
-        className="map-overlay"
-        animate={{ opacity: isHovered ? 0 : 0.8 }}
+        className="map-overlay-bg"
+        initial={{ opacity: 0.8 }}
+        animate={{ opacity: isHovered ? 0.3 : 0.8 }}
         transition={{ duration: 0.3 }}
+        style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'linear-gradient(180deg, rgba(0,0,0,0.35), transparent)' }}
+      />
+
+      {/* Info + button always visible and interactive */}
+      <div 
+        className="map-info" 
+        style={{ position: 'relative', zIndex: 2, padding: '16px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}
       >
-        <div className="map-info">
-          <div className="map-icon">📍</div>
-          <div className="map-text">
-            <h4>Stand Automóvel</h4>
-            <p>Rua dos Carros Premium, 123<br />1000-001 Lisboa</p>
-            <button className="btn btn-sm btn-primary">Ver no Maps</button>
-          </div>
+        <div className="additional-icon map-icon" style={{ fontSize: 20, marginBottom: 10 }}>📍</div>
+        <div className="map-text" style={{ maxWidth: 260 }}>
+          <h4 style={{ margin: 0 }}>Automóveis Oliveira Santos</h4>
+          <p style={{ margin: '8px 0 12px' }}>R. Moleiros 58<br/>4415-403 Seixezelo</p>
+          <a
+            href={mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-sm btn-primary"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+          >
+            Ver no Maps
+          </a>
         </div>
-      </motion.div>
+      </div>
       
-      <div className="map-placeholder">
-        {/* Map visualization */}
+      <div className="map-placeholder" style={{ position: 'relative', zIndex: 1 }}>
+        {/* Map visualization (dots) */}
         <div className="map-grid">
           {[...Array(100)].map((_, i) => (
             <motion.div
@@ -464,7 +484,7 @@ export default function Contact() {
     {
       icon: '📍',
       title: 'Morada',
-      content: ['Rua dos Carros Premium, 123', '1000-001 Lisboa, Portugal'],
+      content: ['R. Moleiros 58', '4415-403 Seixezelo, Portugal'],
       color: 'success'
     },
     {
@@ -553,212 +573,188 @@ export default function Contact() {
       {/* Contact Form & Map */}
       <section className="contact-form-section">
         <div className="container">
-          <div className="contact-form-grid">
+          {/* force single column: mantemos só o formulário (remoção da coluna direita) */}
+          <div className="contact-form-grid" style={{ gridTemplateColumns: '1fr', gap: 'var(--space-8)' }}>
             {/* Contact Form */}
             <motion.div
               ref={formRef}
               className="contact-form-container"
+              style={{ display: 'flex', justifyContent: 'center' }}
               initial={{ opacity: 0, x: -60 }}
               animate={isFormInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -60 }}
               transition={{ duration: 0.8, delay: 0.3 }}
             >
-              <div className="form-header">
-                <h2>Fale Connosco</h2>
-                <p>Preencha o formulário e entraremos em contacto consigo.</p>
-              </div>
-
-              <form onSubmit={handleSubmit} className="contact-form" noValidate>
-                <div className="form-row">
-                  <FormField
-                    type="text"
-                    name="name"
-                    label="Nome Completo"
-                    placeholder="Insira o seu nome"
-                    value={form.values.name}
-                    error={form.errors.name}
-                    touched={form.touched.name}
-                    onChange={form.handleChange}
-                    onBlur={form.handleBlur}
-                    required
-                    icon="👤"
-                  />
-                  
-                  <FormField
-                    type="email"
-                    name="email"
-                    label="Email"
-                    placeholder="seu@email.com"
-                    value={form.values.email}
-                    error={form.errors.email}
-                    touched={form.touched.email}
-                    onChange={form.handleChange}
-                    onBlur={form.handleBlur}
-                    required
-                    icon="✉️"
-                  />
+              {/* Inner wrapper limits width and centers form without changing global styles */}
+              <div style={{ width: '100%', maxWidth: 760 }}>
+                <div className="form-header">
+                  <h2>Fale Connosco</h2>
+                  <p>Preencha o formulário e entraremos em contacto consigo.</p>
                 </div>
 
-                <div className="form-row">
-                  <FormField
-                    type="tel"
-                    name="phone"
-                    label="Telefone"
-                    placeholder="+351 9__ ___ ___"
-                    value={form.values.phone}
-                    error={form.errors.phone}
-                    touched={form.touched.phone}
-                    onChange={form.handleChange}
-                    onBlur={form.handleBlur}
-                    icon="📞"
-                  />
-
-                  <div className="form-field">
-                    <label className="form-label">Assunto</label>
-                    <select
-                      name="subject"
-                      value={form.values.subject}
+                <form onSubmit={handleSubmit} className="contact-form" noValidate>
+                  <div className="form-row">
+                    <FormField
+                      type="text"
+                      name="name"
+                      label="Nome Completo"
+                      placeholder="Insira o seu nome"
+                      value={form.values.name}
+                      error={form.errors.name}
+                      touched={form.touched.name}
                       onChange={form.handleChange}
-                      className="form-input form-select"
-                    >
-                      {subjectOptions.map(option => (
-                        <option key={option} value={option}>{option}</option>
-                      ))}
-                    </select>
+                      onBlur={form.handleBlur}
+                      required
+                      icon="👤"
+                    />
+                    
+                    <FormField
+                      type="email"
+                      name="email"
+                      label="Email"
+                      placeholder="seu@email.com"
+                      value={form.values.email}
+                      error={form.errors.email}
+                      touched={form.touched.email}
+                      onChange={form.handleChange}
+                      onBlur={form.handleBlur}
+                      required
+                      icon="✉️"
+                    />
                   </div>
-                </div>
 
-                <div className="form-row">
-                  <FormField
-                    type="text"
-                    name="interest"
-                    label="Interesse (Marca/Modelo)"
-                    placeholder="Ex: BMW X5, Mercedes C-Class..."
-                    value={form.values.interest}
-                    error={form.errors.interest}
-                    touched={form.touched.interest}
-                    onChange={form.handleChange}
-                    onBlur={form.handleBlur}
-                    icon="🚗"
-                  />
+                  <div className="form-row">
+                    <FormField
+                      type="tel"
+                      name="phone"
+                      label="Telefone"
+                      placeholder="+351 9__ ___ ___"
+                      value={form.values.phone}
+                      error={form.errors.phone}
+                      touched={form.touched.phone}
+                      onChange={form.handleChange}
+                      onBlur={form.handleBlur}
+                      icon="📞"
+                    />
 
-                  <FormField
-                    type="text"
-                    name="budget"
-                    label="Orçamento Aproximado"
-                    placeholder="Ex: 20.000€ - 30.000€"
-                    value={form.values.budget}
-                    error={form.errors.budget}
-                    touched={form.touched.budget}
-                    onChange={form.handleChange}
-                    onBlur={form.handleBlur}
-                    icon="💰"
-                  />
-                </div>
+                    {/* subject select with inline fixed label */}
+                    <div className="form-field inline">
+                      <label className="form-label-inline">Assunto</label>
 
-                <FormField
-                  type="textarea"
-                  name="message"
-                  label="Mensagem"
-                  placeholder="Descreva como podemos ajudá-lo..."
-                  value={form.values.message}
-                  error={form.errors.message}
-                  touched={form.touched.message}
-                  onChange={form.handleChange}
-                  onBlur={form.handleBlur}
-                  required
-                  rows={5}
-                  icon="💬"
-                />
+                      <div className="select-wrapper">
+                        {/* visual selected value (readable, aligned) */}
+                        <span className="select-value">{form.values.subject}</span>
 
-                <div className="form-preferences">
-                  <label className="preference-label">Preferência de Contacto:</label>
-                  <div className="preference-options">
-                    {['email', 'phone', 'whatsapp'].map(pref => (
-                      <label key={pref} className="preference-option">
-                        <input
-                          type="radio"
-                          name="contactPreference"
-                          value={pref}
-                          checked={form.values.contactPreference === pref}
+                        {/* native select kept for accessibility; text hidden so span shows instead */}
+                        <select
+                          name="subject"
+                          value={form.values.subject}
                           onChange={form.handleChange}
+                          className="form-input form-select with-inline-label native-select"
+                          aria-label="Assunto"
+                        >
+                          {subjectOptions.map(option => (
+                            <option key={option} value={option}>{option}</option>
+                          ))}
+                        </select>
+
+                        <div className="select-arrow" aria-hidden="true">▾</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="form-row">
+                    <FormField
+                      type="text"
+                      name="interest"
+                      label="Interesse (Marca/Modelo)"
+                      placeholder="Ex: BMW X5, Mercedes C-Class..."
+                      value={form.values.interest}
+                      error={form.errors.interest}
+                      touched={form.touched.interest}
+                      onChange={form.handleChange}
+                      onBlur={form.handleBlur}
+                      icon="🚗"
+                    />
+
+                    <FormField
+                      type="text"
+                      name="budget"
+                      label="Orçamento Aproximado"
+                      placeholder="Ex: 20.000€ - 30.000€"
+                      value={form.values.budget}
+                      error={form.errors.budget}
+                      touched={form.touched.budget}
+                      onChange={form.handleChange}
+                      onBlur={form.handleBlur}
+                      icon="💰"
+                    />
+                  </div>
+
+                  <FormField
+                    type="textarea"
+                    name="message"
+                    label="Mensagem"
+                    placeholder="Descreva como podemos ajudá-lo..."
+                    value={form.values.message}
+                    error={form.errors.message}
+                    touched={form.touched.message}
+                    onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                    required
+                    rows={5}
+                    icon="💬"
+                  />
+
+                  <div className="form-preferences">
+                    <label className="preference-label">Preferência de Contacto:</label>
+                    <div className="preference-options">
+                      {['email', 'phone', 'whatsapp'].map(pref => (
+                        <label key={pref} className="preference-option">
+                          <input
+                            type="radio"
+                            name="contactPreference"
+                            value={pref}
+                            checked={form.values.contactPreference === pref}
+                            onChange={form.handleChange}
+                          />
+                          <span className="preference-text">
+                            {pref === 'email' && '✉️ Email'}
+                            {pref === 'phone' && '📞 Telefone'}
+                            {pref === 'whatsapp' && '💬 WhatsApp'}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <motion.button
+                    type="submit"
+                    className="btn btn-primary btn-lg form-submit"
+                    disabled={form.isSubmitting}
+                    /* removed motion hover/tap to prevent size changes on hover */
+                    transition={{ duration: 0.2 }}
+                  >
+                    {form.isSubmitting ? (
+                      <motion.div className="loading-content">
+                        <motion.div 
+                          className="spinner"
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
                         />
-                        <span className="preference-text">
-                          {pref === 'email' && '✉️ Email'}
-                          {pref === 'phone' && '📞 Telefone'}
-                          {pref === 'whatsapp' && '💬 WhatsApp'}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <motion.button
-                  type="submit"
-                  className="btn btn-primary btn-lg form-submit"
-                  disabled={form.isSubmitting}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {form.isSubmitting ? (
-                    <motion.div className="loading-content">
-                      <motion.div 
-                        className="spinner"
-                        animate={{ rotate: 360 }}
-                        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                      />
-                      Enviando...
-                    </motion.div>
-                  ) : (
-                    <>
-                      <span>Enviar Mensagem</span>
-                      <span className="btn-arrow">→</span>
-                    </>
-                  )}
-                </motion.button>
-              </form>
-            </motion.div>
-
-            {/* Map Section */}
-            <motion.div
-              className="contact-map-container"
-              initial={{ opacity: 0, x: 60 }}
-              animate={isFormInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 60 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-            >
-              <div className="map-header">
-                <h3>Visite-nos</h3>
-                <p>Estamos localizados no coração de Lisboa</p>
-              </div>
-              
-              <InteractiveMap />
-
-              <div className="contact-additional">
-                <div className="additional-item">
-                  <div className="additional-icon">🚗</div>
-                  <div className="additional-content">
-                    <h4>Test Drives</h4>
-                    <p>Agende um test drive sem compromisso</p>
-                  </div>
-                </div>
-                
-                <div className="additional-item">
-                  <div className="additional-icon">💼</div>
-                  <div className="additional-content">
-                    <h4>Financiamento</h4>
-                    <p>Soluções personalizadas de financiamento</p>
-                  </div>
-                </div>
-                
-                <div className="additional-item">
-                  <div className="additional-icon">🔧</div>
-                  <div className="additional-content">
-                    <h4>Pós-Venda</h4>
-                    <p>Serviço completo de manutenção</p>
-                  </div>
-                </div>
+                        Enviando...
+                      </motion.div>
+                    ) : (
+                      <>
+                        <span>Enviar Mensagem</span>
+                        <span className="btn-arrow">→</span>
+                      </>
+                    )}
+                  </motion.button>
+                </form>
               </div>
             </motion.div>
+
+            {/* coluna direita removida (Visite-nos, mapa, test drives, financiamento, pós-venda) */}
           </div>
         </div>
       </section>

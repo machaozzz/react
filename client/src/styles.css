@@ -984,7 +984,7 @@ body {
   position: relative;
   height: 240px;
   overflow: hidden;
-  background: var(--bg-tertiary);
+  background: var(--bg-terciary);
 }
 
 .vehicle-image {
@@ -1181,7 +1181,7 @@ body {
   background: linear-gradient(
     90deg,
     var(--bg-secondary) 25%,
-    var(--bg-tertiary) 50%,
+    var(--bg-terciary) 50%,
     var(--bg-secondary) 75%
   );
   background-size: 200% 100%;
@@ -1337,7 +1337,7 @@ body {
 
 .modal-gallery-section {
   position: relative;
-  background: var(--bg-tertiary);
+  background: var(--bg-terciary);
   overflow: hidden;
 }
 
@@ -1487,7 +1487,7 @@ body {
 
 .gallery-progress {
   height: 4px;
-  background: var(--bg-tertiary);
+  background: var(--bg-terciary);
   position: relative;
 }
 
@@ -1609,7 +1609,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-tertiary);
+  background: var(--bg-terciary);
   border-radius: var(--radius-lg);
   flex-shrink: 0;
 }
@@ -1673,7 +1673,7 @@ body {
 }
 
 .feature-item {
-  background: var(--bg-tertiary);
+  background: var(--bg-terciary);
   border: 1px solid var(--border-subtle);
   color: var(--text-secondary);
   padding: var(--space-2) var(--space-3);
@@ -1754,7 +1754,7 @@ body {
   top: -140px;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--bg-tertiary);
+  background: var(--bg-terciary);
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
@@ -1800,6 +1800,229 @@ body {
   inset: 0;
   pointer-events: none;
   overflow: hidden;
+}
+
+/* Correções mínimas de alinhamento para form fields e cards */
+
+.form-field { min-width: 0; position: relative; }
+
+/* coloca o ícone dentro do container, não empurra o label */
+.form-input-container { position: relative; }
+.form-input-icon {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--text-muted);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+/* quando houver ícone, dá padding ao input e desloca o label para não sobrepor */
+.form-input.has-icon {
+  padding-left: calc(36px + var(--space-4) + 12px);
+}
+
+.form-field.has-icon .form-label {
+  left: calc(var(--space-4) + 36px + 12px);
+}
+
+/* pequenos ajustes nos cartões de contacto */
+.contact-info-content { align-items: flex-start; }
+.contact-info-icon {
+  width: 56px;
+  height: 56px;
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Floating label + stacked emoji inputs (minimal, non-invasive) */
+
+/* stacked emoji + floating label — alinhamento à esquerda, consistente em todos os dispositivos */
+
+.form-field.stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: stretch;
+  position: relative;
+}
+
+/* emoji acima, alinhado à esquerda (não centra) */
+.form-field.stacked .form-icon-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  pointer-events: none;
+  padding-left: var(--space-4);
+}
+.form-field.stacked .form-icon {
+  margin: 0;
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  border-radius: 10px;
+  background: var(--bg-glass);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+
+/* input area & floating label */
+.form-field.stacked .form-input-area { position: relative; width: 100%; }
+.form-field.stacked .form-label {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 16px;
+  font-weight: 600;
+  transition: transform 0.18s ease, top 0.18s ease, font-size 0.18s ease, color 0.18s ease;
+  background: transparent;
+  padding: 0 6px;
+  z-index: 3;
+  cursor: text;
+}
+
+/* reserve espaço no input para o label (label fica dentro da box) */
+.form-field.stacked .form-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bg-terciary);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 18px var(--space-4) 12px var(--space-4); /* topo maior para label */
+  color: var(--text-primary);
+  font-size: 16px;
+  transition: var(--transition);
+  font-family: inherit;
+}
+
+/* floating/raised state - on focus or when field has value */
+.form-field.stacked.focused .form-label,
+.form-field.stacked.has-value .form-label {
+  top: -10px;
+  transform: translateY(0);
+  left: var(--space-4);
+  font-size: 12px;
+  color: var(--primary);
+  background: var(--bg-primary); /* visually separates label from input */
+  padding: 0 8px;
+  z-index: 4;
+}
+
+/* error states */
+.form-field.stacked.has-error .form-label { color: var(--error); }
+.form-field.stacked .form-input.error { border-color: var(--error); background: rgba(255,55,66,0.03); }
+
+/* textarea adjustments */
+.form-field.stacked textarea.form-input {
+  padding-top: 20px;
+  min-height: 120px;
+}
+
+/* make sure error message doesn't overlap */
+.form-field.stacked .form-error { margin-top: 6px; position: relative; z-index: 2; }
+
+/* responsive tweaks */
+@media (max-width: 480px) {
+  .form-field.stacked .form-icon { width: 40px; height: 40px; font-size: 16px; }
+  .form-field.stacked .form-label { font-size: 15px; left: var(--space-4); }
+  .form-field.stacked.focused .form-label { font-size: 11px; top: -8px; left: var(--space-4); padding: 0 6px; }
+  .form-field.stacked .form-input { padding: 16px var(--space-4) 10px var(--space-4); font-size: 15px; }
+}
+
+/* Scoped: Assunto inline dentro do contact-form — mostra o valor seleccionado à direita do rótulo */
+.contact-form .form-field.inline {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* rótulo fixo à esquerda */
+.contact-form .form-field.inline .form-label-inline {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 15px;
+  z-index: 4;
+  background: transparent;
+  padding: 0 8px;
+  height: 56px;
+  display: inline-flex;
+  align-items: center;
+  width: 120px; /* ajustar se quiseres outro espaço para o rótulo */
+  box-sizing: border-box;
+}
+
+/* wrapper para o select */
+.contact-form .form-field.inline .select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* usa o select nativo para mostrar o valor — damos padding-left para que o texto fique à direita do rótulo */
+.contact-form .form-field.inline .native-select {
+  width: 100%;
+  height: 56px;
+  box-sizing: border-box;
+  padding-left: calc(var(--space-4) + 120px + 12px); /* espaço reservado = left + label width + gap */
+  padding-right: calc(var(--space-4) + 28px);
+  background: var(--bg-terciary);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-size: 16px;
+  -webkit-appearance: menulist;
+  -moz-appearance: menulist;
+  appearance: menulist;
+  z-index: 2;
+}
+
+/* garante legibilidade das options no dropdown nativo */
+.contact-form .form-field.inline .native-select option {
+  color: var(--text-primary);
+  background: var(--bg-primary);
+}
+
+/* seta/arrow posicionado à direita */
+.contact-form .form-field.inline .select-arrow {
+  position: absolute;
+  right: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  font-size: 18px;
+  color: var(--text-secondary);
+  z-index: 5;
+}
+
+/* escondemos o span .select-value (já não é necessário) */
+.contact-form .form-field.inline .select-value {
+  display: none;
+}
+
+/* foco: destaque apenas dentro do formulário */
+.contact-form .form-field.inline .native-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(0,102,255,0.06);
 }
 
 /* Responsive */
@@ -1920,7 +2143,6 @@ body {
 
 .logout-btn {
   padding: var(--space-3) var(--space-6);
-  border: 1px solid var(--border-medium);
 }
 
 /* Navigation Tabs */
@@ -2149,7 +2371,7 @@ body {
 .form-select,
 .form-textarea {
   width: 100%;
-  background: var(--bg-tertiary);
+  background: var(--bg-terciary);
   border: 2px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: var(--space-4);
@@ -2206,7 +2428,7 @@ body {
 
 .new-fuel-input {
   flex: 1;
-  background: var(--bg-tertiary);
+  background: var(--bg-terciary);
   border: 2px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: var(--space-3);
@@ -2370,7 +2592,7 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: var(--space-3);
-  background: var(--bg-tertiary);
+  background: var(--bg-terciary);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border-subtle);
 }
@@ -2548,7 +2770,7 @@ body {
 }
 
 .btn-icon.delete {
-  background: var(--error);
+   background: var(--error);
 }
 
 /* Recent Activity */
@@ -2667,6 +2889,7 @@ body {
 }
 
 .login-logo {
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2813,288 +3036,134 @@ body {
   gap: var(--space-6);
 }
 
-/* Modern Input */
-.modern-input-wrapper {
-  position: relative;
+/* Minimal layout helpers for contact alignment (no visual style changes) */
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.modern-input-container {
-  position: relative;
-  background: var(--bg-secondary);
+/* Contact info grid: ensure consistent columns & alignment */
+.contact-info-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-6);
+  align-items: stretch;
+}
+
+/* Card alignment: keep internal layout stable */
+.contact-info-card {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  padding: var(--space-6);
+  min-height: 96px;
+}
+
+/* Form + Map grid */
+.contact-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+/* Ensure form column is centered inside its container without changing visual tokens */
+.contact-form-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0; /* keep existing visual padding from inner wrapper */
+}
+
+/* Map column baseline */
+.contact-map-container {
+  padding: var(--space-6);
+  background: transparent; /* preserve look by not overriding */
+}
+
+/* Footer helper if footer used .site-footer */
+.site-footer {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+  text-align: center;
+}
+
+/* Keep responsive behaviour — adapt columns progressively */
+@media (max-width: 1100px) {
+  .contact-info-grid { grid-template-columns: repeat(2, 1fr); }
+  .contact-form-grid { grid-template-columns: 1fr 360px; }
+}
+
+@media (max-width: 768px) {
+  .contact-info-grid { grid-template-columns: 1fr; gap: var(--space-4); }
+  .contact-form-grid { grid-template-columns: 1fr; gap: var(--space-6); }
+  .form-row { grid-template-columns: 1fr; gap: var(--space-4); }
+  .contact-form-container { padding: var(--space-6); }
+}
+
+/* Inline label for select (Assunto) — label à esquerda, valor à direita (fix) */
+.form-field.inline { position: relative; display: flex; align-items: center; }
+
+.form-field.inline .form-label-inline {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 15px;
+  z-index: 4;
+  /* fundo igual ao input para não deixar o texto aparecer por baixo */
+  background: var(--bg-terciary);
+  padding: 0 10px 0 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* espaço reservado no select para a label — ajustar se a label mudar de largura */
+.form-field.inline .form-select.with-inline-label,
+.form-field.inline .form-input.with-inline-label {
+  padding-left: calc(var(--space-4) + 120px); /* ajustar 96–140px conforme necessário */
+  background: var(--bg-terciary);
+  color: var(--text-primary);
   border: 2px solid var(--border-subtle);
   border-radius: var(--radius-lg);
-  transition: var(--transition);
+  height: 56px;
+  line-height: 56px;
+  box-sizing: border-box;
 }
 
-.modern-input-container.focused {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.1);
-  transform: translateY(-2px);
-}
-
-.modern-input-container.error {
-  border-color: var(--error);
-  box-shadow: 0 0 0 4px rgba(255, 71, 87, 0.1);
-}
-
-.input-icon {
-  position: absolute;
-  left: var(--space-4);
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 18px;
-  z-index: 3;
-  color: var(--text-muted);
-  transition: var(--transition);
-}
-
-.modern-input-container.focused .input-icon {
-  color: var(--primary);
-}
-
-.modern-input {
-  width: 100%;
-  background: transparent;
-  border: none;
-  padding: var(--space-4);
-  color: var(--text-primary);
-  font-size: 16px;
-  z-index: 2;
-  position: relative;
-}
-
-.modern-input.has-icon {
-  padding-left: var(--space-12);
-}
-
-.modern-input:focus {
+/* manter aparência consistente no foco */
+.form-field.inline .form-select.with-inline-label:focus {
   outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.08);
 }
 
-.modern-label {
-  position: absolute;
-  left: var(--space-4);
-  top: 50%;
-  transform: translateY(-50%);
-  color: var(--text-muted);
-  font-size: 16px;
-  font-weight: 500;
-  pointer-events: none;
-  z-index: 1;
-  background: var(--bg-secondary);
-  padding: 0 var(--space-2);
-  transform-origin: left center;
+/* esconder seta nativa em browsers que suportam */
+.form-field.inline .form-select.with-inline-label {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: none; /* evita conflitos */
+  padding-right: calc(var(--space-4) + 18px); /* espaço para seta custom se quiseres adicionar */
 }
 
-.modern-label.floating {
-  background: var(--bg-secondary);
-  padding: 0 var(--space-2);
-}
-
-.modern-input.has-icon + .modern-label {
-  left: var(--space-12);
-}
-
-.required-star {
-  color: var(--error);
-}
-
-.password-toggle {
-  position: absolute;
-  right: var(--space-4);
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  cursor: pointer;
-  z-index: 3;
-  font-size: 16px;
-  transition: var(--transition);
-}
-
-.password-toggle:hover {
+/* fallback: torna as opções legíveis no caso do dropdown nativo (alguns browsers ignoram) */
+.form-field.inline .form-select.with-inline-label option {
+  background: var(--bg-primary);
   color: var(--text-primary);
 }
 
-.input-border {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
-  overflow: hidden;
-}
-
-.input-border-active {
-  height: 100%;
-  background: var(--primary);
-  transform-origin: left;
-}
-
-.input-error {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  color: var(--error);
-  font-size: 14px;
-  font-weight: 600;
-  margin-top: var(--space-2);
-}
-
-/* Form Options */
-.form-options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: var(--space-4);
-}
-
-.remember-me {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  cursor: pointer;
-  user-select: none;
-}
-
-.remember-me input[type="checkbox"] {
-  display: none;
-}
-
-.checkbox-custom {
-  width: 20px;
-  height: 20px;
-  border: 2px solid var(--border-medium);
-  border-radius: var(--radius-sm);
-  position: relative;
-  transition: var(--transition);
-}
-
-.remember-me input[type="checkbox"]:checked + .checkbox-custom {
-  border-color: var(--primary);
-  background: var(--primary);
-}
-
-.remember-me input[type="checkbox"]:checked + .checkbox-custom::after {
-  content: '✓';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: white;
-  font-weight: bold;
-  font-size: 12px;
-}
-
-.checkbox-text {
-  color: var(--text-secondary);
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.forgot-password {
-  background: none;
-  border: none;
-  color: var(--primary);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.forgot-password:hover {
-  color: var(--accent);
-  text-decoration: underline;
-}
-
-/* Forgot Password Section */
-.forgot-password-section {
-  background: var(--bg-glass);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  overflow: hidden;
-}
-
-.forgot-content p {
-  color: var(--text-secondary);
-  font-size: 14px;
-  margin-bottom: var(--space-4);
-}
-
-.forgot-actions {
-  display: flex;
-  gap: var(--space-3);
-  justify-content: flex-end;
-}
-
-/* Submit Button */
-.login-submit {
-  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-  color: white;
-  border: none;
-  border-radius: var(--radius-lg);
-  padding: var(--space-4) var(--space-6);
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: var(--transition);
-  position: relative;
-  overflow: hidden;
-}
-
-.login-submit::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.15),
-    transparent
-  );
-  transition: left 0.6s ease;
-}
-
-.login-submit:hover::before {
-  left: 100%;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .admin-header-content {
-    flex-direction: column;
-    gap: var(--space-4);
-    text-align: center;
-  }
-  
-  .nav-tabs {
-    flex-wrap: wrap;
-  }
-  
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .fuel-input-group {
-    flex-direction: column;
-  }
-  
-  .radio-group {
-    flex-direction: column;
-  }
-  
-  .dashboard-stats {
-    grid-template-columns: 1fr;
-  }
-  
-  .vehicle-form-container {
-    padding: var(--space-6);
-  }
+/* responsivo */
+@media (max-width: 480px) {
+  .form-field.inline .form-label-inline { font-size: 14px; left: var(--space-4); }
+  .form-field.inline .form-select.with-inline-label { padding-left: calc(var(--space-4) + 96px); height: 52px; line-height: 52px; }
 }
