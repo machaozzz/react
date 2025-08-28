@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence, useInView, useAnimation } from 'framer-motion'
+import { motion, useInView, useAnimation, AnimatePresence } from 'framer-motion'
 
 // Advanced Form Hook
 function useForm(initialValues, validationRules) {
@@ -658,14 +658,14 @@ const form = useForm(
                       icon="📞"
                     />
 
-                    {/* --- substitua o bloco abaixo pelo seu snippet --- */}
+                    {/* subject select with inline fixed label */}
                     <div className="form-field">
-                      <label className="form-label">Assunto: {form.values.subject}</label>
+                      <label className="form-label-static">Assunto: {form.values.subject}</label>
                       <select
                         name="subject"
                         value={form.values.subject}
                         onChange={form.handleChange}
-                        className="form-input form-select"
+                        className="form-select"
                       >
                         {subjectOptions.map(option => (
                           <option key={option} value={option}>{option}</option>

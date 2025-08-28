@@ -3035,7 +3035,47 @@ body {
   flex-direction: column;
   gap: var(--space-6);
 }
+/* Form Label Estático para Select */
+.form-label-static {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+  padding: 0 var(--space-2);
+}
 
+/* Form Select Melhorado */
+.form-select {
+  width: 100%;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4) var(--space-5);
+  color: var(--text-primary);
+  font-size: 16px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: var(--transition);
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a0a0a3' d='M6 8.5L2.5 5h7L6 8.5z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-4) center;
+  background-size: 12px;
+}
+
+.form-select:hover {
+  border-color: var(--border-medium);
+  background-color: var(--bg-tertiary);
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  background-color: var(--bg-tertiary);
+  transform: translateY(-2px);
+  box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.1), var(--shadow-lg);
+}
 /* Scoped: Form Preferences - Modern Cards (only inside contact form) */
 .contact-form .form-preferences {
   margin: var(--space-8) 0;
